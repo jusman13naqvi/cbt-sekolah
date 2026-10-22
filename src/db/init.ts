@@ -277,13 +277,13 @@ export async function initializeDatabase() {
   const classCheck = await db.execute(`SELECT COUNT(*) as count FROM classes`);
   if (Number(classCheck.rows[0].count) === 0) {
     const defaultClasses = [
-      { id: 'c_7a', name: '7A', grade: 7, homeroom: 'Dra. Hj. Siti Aminah' },
-      { id: 'c_7b', name: '7B', grade: 7, homeroom: 'Budi Santoso, S.Pd.' },
-      { id: 'c_8a', name: '8A', grade: 8, homeroom: 'Rina Wijaya, S.Kom.' },
-      { id: 'c_8b', name: '8B', grade: 8, homeroom: 'Ahmad Dahlan, M.Pd.' },
-      { id: 'c_8c', name: '8C', grade: 8, homeroom: 'Eka Putri, S.Si.' },
-      { id: 'c_9a', name: '9A', grade: 9, homeroom: 'Hendra Gunawan, S.T.' },
-      { id: 'c_9b', name: '9B', grade: 9, homeroom: 'Siti Nurhaliza, S.Pd.' },
+      { id: 'c_7a', name: '7A', grade: 7, homeroom: '' },
+      { id: 'c_7b', name: '7B', grade: 7, homeroom: '' },
+      { id: 'c_8a', name: '8A', grade: 8, homeroom: '' },
+      { id: 'c_8b', name: '8B', grade: 8, homeroom: '' },
+      { id: 'c_8c', name: '8C', grade: 8, homeroom: '' },
+      { id: 'c_9a', name: '9A', grade: 9, homeroom: '' },
+      { id: 'c_9b', name: '9B', grade: 9, homeroom: '' },
     ];
     for (const c of defaultClasses) {
       await db.execute({
@@ -314,173 +314,23 @@ export async function initializeDatabase() {
     console.log('[DB Seed] Seeded default school subjects');
   }
 
-  // Seed sample Teacher if empty
-  const teacherCheck = await db.execute(`SELECT COUNT(*) as count FROM teachers`);
-  if (Number(teacherCheck.rows[0].count) === 0) {
-    const hashedTeacherPassword = await bcrypt.hash('guru123', 10);
-    await db.execute({
-      sql: `INSERT INTO users (id, username, password, role, full_name, is_active) VALUES (?, ?, ?, ?, ?, 1)`,
-      args: ['u_guru_inf', 'guruinf', hashedTeacherPassword, 'teacher', 'Rina Wijaya, S.Kom. (Guru Informatika)', 1],
-    });
-    await db.execute({
-      sql: `INSERT INTO teachers (id, user_id, nip, email, phone) VALUES (?, ?, ?, ?, ?)`,
-      args: ['t_guru_inf', 'u_guru_inf', '198803152015032001', 'rina.wijaya@spanju.sch.id', '081298765432'],
-    });
-    console.log('[DB Seed] Seeded sample teacher (username: guruinf, password: guru123)');
-  }
-
-  // Seed sample Student if empty
-  const studentCheck = await db.execute(`SELECT COUNT(*) as count FROM students`);
-  if (Number(studentCheck.rows[0].count) === 0) {
-    const hashedStudentPassword = await bcrypt.hash('siswa123', 10);
-    const sampleStudents = [
-      { id: 's_sis_1', uid: 'u_sis_1', username: 'siswa7a', nisn: '0081234567', name: 'Ananda Rizky', classId: 'c_7a', className: '7A', gender: 'L' },
-      { id: 's_sis_2', uid: 'u_sis_2', username: 'siswa7a_2', nisn: '0081234568', name: 'Siti Badriah', classId: 'c_7a', className: '7A', gender: 'P' },
-      { id: 's_sis_3', uid: 'u_sis_3', username: 'siswa8a', nisn: '0071234569', name: 'Budi Kurniawan', classId: 'c_8a', className: '8A', gender: 'L' },
-      { id: 's_sis_4', uid: 'u_sis_4', username: 'siswa9a', nisn: '0061234570', name: 'Dewi Sartika', classId: 'c_9a', className: '9A', gender: 'P' },
-    ];
-    for (const s of sampleStudents) {
-      await db.execute({
-        sql: `INSERT INTO users (id, username, password, role, full_name, is_active) VALUES (?, ?, ?, 'student', ?, 1)`,
-        args: [s.uid, s.username, hashedStudentPassword, s.name],
-      });
-      await db.execute({
-        sql: `INSERT INTO students (id, user_id, nisn, class_id, class_name, gender, initial_password, is_active) VALUES (?, ?, ?, ?, ?, ?, 'siswa123', 1)`,
-        args: [s.id, s.uid, s.nisn, s.classId, s.className, s.gender],
-      });
-    }
-    console.log('[DB Seed] Seeded sample students (e.g. username: siswa7a, password: siswa123)');
-  }
-
-  // Seed a sample Informatika Exam for immediate CBT testing!
-  const examCheck = await db.execute(`SELECT COUNT(*) as count FROM exams`);
-  if (Number(examCheck.rows[0].count) === 0) {
-    const now = new Date();
-    const startTime = new Date(now.getTime() - 1000 * 60 * 30).toISOString(); // Started 30 mins ago
-    const endTime = new Date(now.getTime() + 1000 * 60 * 60 * 24).toISOString(); // Valid for 24h
-    const examId = 'ex_inf_7a_1';
-
-    await db.execute({
-      sql: `INSERT INTO exams (
-        id, title, subject_id, subject_name, class_id, class_name, teacher_id, teacher_name,
-        description, start_time, end_time, duration_minutes, kkm, token, is_token_required,
-        total_questions, total_weight, shuffle_questions, shuffle_options, violation_limit, violation_action, auto_release_score, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      args: [
-        examId,
-        'Ulangan Harian 1 Informatika: Perangkat Keras & Jaringan',
-        'sub_inf',
-        'Informatika',
-        'c_7a',
-        '7A',
-        't_guru_inf',
-        'Rina Wijaya, S.Kom.',
-        'Ulangan Harian Berbasis CBT Informatika - SMPN 7 Muara Badak (KSRG). Jawablah pertanyaan dengan jujur.',
-        startTime,
-        endTime,
-        60,
-        75,
-        'SPANJU7',
-        1,
-        5,
-        100,
-        0,
-        0,
-        3,
-        'warn',
-        1,
-        'ongoing',
-      ],
-    });
-
-    // Question 1: PG (Multiple Choice)
-    const q1Id = 'q_inf_1';
-    await db.execute({
-      sql: `INSERT INTO questions (id, exam_id, question_type, question_text, weight, order_index) VALUES (?, ?, 'multiple_choice', ?, 20, 1)`,
-      args: [q1Id, examId, 'Manakah di bawah ini yang termasuk perangkat keras masukan (input device) pada komputer/Chromebook?'],
-    });
-    await db.execute({
-      sql: `INSERT INTO question_options (id, question_id, option_text, is_correct, order_index) VALUES (?, ?, ?, ?, ?)`,
-      args: ['opt_q1_1', q1Id, 'Keyboard & Mouse', 1, 1],
-    });
-    await db.execute({
-      sql: `INSERT INTO question_options (id, question_id, option_text, is_correct, order_index) VALUES (?, ?, ?, ?, ?)`,
-      args: ['opt_q1_2', q1Id, 'Monitor & Monitor Touchscreen', 0, 2],
-    });
-    await db.execute({
-      sql: `INSERT INTO question_options (id, question_id, option_text, is_correct, order_index) VALUES (?, ?, ?, ?, ?)`,
-      args: ['opt_q1_3', q1Id, 'Printer & Speaker', 0, 3],
-    });
-    await db.execute({
-      sql: `INSERT INTO question_options (id, question_id, option_text, is_correct, order_index) VALUES (?, ?, ?, ?, ?)`,
-      args: ['opt_q1_4', q1Id, 'Proyektor LCD', 0, 4],
-    });
-
-    // Question 2: PG Kompleks (Complex Multiple Choice)
-    const q2Id = 'q_inf_2';
-    await db.execute({
-      sql: `INSERT INTO questions (id, exam_id, question_type, question_text, weight, order_index) VALUES (?, ?, 'complex_multiple_choice', ?, 20, 2)`,
-      args: [q2Id, examId, 'Pilihlah SEMUA aplikasi layanan Google Workspace for Education yang biasa digunakan dalam Pembelajaran Jarak Jauh (PJJ)! (Pilihan bisa lebih dari satu)'],
-    });
-    await db.execute({
-      sql: `INSERT INTO question_options (id, question_id, option_text, is_correct, order_index) VALUES (?, ?, ?, ?, ?)`,
-      args: ['opt_q2_1', q2Id, 'Google Classroom', 1, 1],
-    });
-    await db.execute({
-      sql: `INSERT INTO question_options (id, question_id, option_text, is_correct, order_index) VALUES (?, ?, ?, ?, ?)`,
-      args: ['opt_q2_2', q2Id, 'Google Drive', 1, 2],
-    });
-    await db.execute({
-      sql: `INSERT INTO question_options (id, question_id, option_text, is_correct, order_index) VALUES (?, ?, ?, ?, ?)`,
-      args: ['opt_q2_3', q2Id, 'Adobe Photoshop CS6', 0, 3],
-    });
-    await db.execute({
-      sql: `INSERT INTO question_options (id, question_id, option_text, is_correct, order_index) VALUES (?, ?, ?, ?, ?)`,
-      args: ['opt_q2_4', q2Id, 'Google Meet', 1, 4],
-    });
-
-    // Question 3: Benar / Salah (True or False)
-    const q3Id = 'q_inf_3';
-    await db.execute({
-      sql: `INSERT INTO questions (id, exam_id, question_type, question_text, weight, order_index) VALUES (?, ?, 'true_false', ?, 20, 3)`,
-      args: [q3Id, examId, 'Sistem Operasi ChromeOS pada Chromebook dirancang untuk bekerja secara efisien dengan berbasis cloud computing.'],
-    });
-    await db.execute({
-      sql: `INSERT INTO question_options (id, question_id, option_text, is_correct, order_index) VALUES (?, ?, ?, ?, ?)`,
-      args: ['opt_q3_1', q3Id, 'BENAR', 1, 1],
-    });
-    await db.execute({
-      sql: `INSERT INTO question_options (id, question_id, option_text, is_correct, order_index) VALUES (?, ?, ?, ?, ?)`,
-      args: ['opt_q3_2', q3Id, 'SALAH', 0, 2],
-    });
-
-    // Question 4: Menjodohkan (Matching)
-    const q4Id = 'q_inf_4';
-    await db.execute({
-      sql: `INSERT INTO questions (id, exam_id, question_type, question_text, weight, order_index) VALUES (?, ?, 'matching', ?, 20, 4)`,
-      args: [q4Id, examId, 'Jodohkan istilah komponen jaringan berikut dengan fungsinya yang tepat!'],
-    });
-    await db.execute({
-      sql: `INSERT INTO matching_pairs (id, question_id, left_text, right_text, order_index) VALUES (?, ?, ?, ?, ?)`,
-      args: ['pair_1', q4Id, 'Router Wireless', 'Menghubungkan jaringan lokal ke internet tanpa kabel', 1],
-    });
-    await db.execute({
-      sql: `INSERT INTO matching_pairs (id, question_id, left_text, right_text, order_index) VALUES (?, ?, ?, ?, ?)`,
-      args: ['pair_2', q4Id, 'Kabel UTP / LAN', 'Media transmisi data fisik tembaga', 2],
-    });
-    await db.execute({
-      sql: `INSERT INTO matching_pairs (id, question_id, left_text, right_text, order_index) VALUES (?, ?, ?, ?, ?)`,
-      args: ['pair_3', q4Id, 'IP Address', 'Alamat unik perangkat dalam jaringan komputer', 3],
-    });
-
-    // Question 5: Esai (Essay)
-    const q5Id = 'q_inf_5';
-    await db.execute({
-      sql: `INSERT INTO questions (id, exam_id, question_type, question_text, weight, order_index) VALUES (?, ?, 'essay', ?, 20, 5)`,
-      args: [q5Id, examId, 'Jelaskan secara singkat keuntungan SMP Negeri 7 Muara Badak sebagai Kandidat Sekolah Rujukan Google (KSRG) dalam mendukung Pembelajaran Jarak Jauh (PJJ)!'],
-    });
-
-    console.log('[DB Seed] Seeded sample Informatika CBT exam with 5 question types (Token: SPANJU7)');
+  // Purge demo records (teachers, students, non-admin users, exams, questions, results) to ensure clean production database
+  try {
+    await db.execute(`DELETE FROM exam_violations`);
+    await db.execute(`DELETE FROM answers`);
+    await db.execute(`DELETE FROM exam_participants`);
+    await db.execute(`DELETE FROM matching_pairs`);
+    await db.execute(`DELETE FROM question_options`);
+    await db.execute(`DELETE FROM questions`);
+    await db.execute(`DELETE FROM exams`);
+    await db.execute(`DELETE FROM class_students`);
+    await db.execute(`DELETE FROM teacher_classes`);
+    await db.execute(`DELETE FROM students`);
+    await db.execute(`DELETE FROM teachers`);
+    await db.execute(`DELETE FROM users WHERE role != 'admin'`);
+    console.log('[DB Purge] Successfully purged all demo accounts, exams, and student records.');
+  } catch (purgeError) {
+    console.error('[DB Purge Error]', purgeError);
   }
 
   console.log('[DB Init] Database initialization complete.');
