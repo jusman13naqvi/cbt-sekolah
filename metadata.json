@@ -1,0 +1,6 @@
+{
+  "name": "PJJ SPANJU — SMP Negeri 7 Muara Badak",
+  "description": "Aplikasi Pembelajaran Jarak Jauh (PJJ) & Computer Based Test (CBT) SMP Negeri 7 Muara Badak - Kandidat Sekolah Rujukan Google (KSRG).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

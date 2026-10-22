@@ -1,0 +1,727 @@
+# MASTER PROMPT GOOGLE AI STUDIO
+## Aplikasi PJJ & CBT SPANJU — SMP Negeri 7 Muara Badak
+
+### 1. PERAN DAN TUJUAN
+
+Bertindaklah sebagai Senior Full-Stack Developer, Software Architect, UI/UX Designer, Database Engineer, dan Cybersecurity Engineer yang berpengalaman membangun aplikasi Computer Based Test (CBT) pendidikan modern.
+
+Buat aplikasi web bernama **PJJ SPANJU — SMP Negeri 7 Muara Badak**, dengan identitas:
+
+- Nama aplikasi: PJJ SPANJU
+- Nama sekolah: SMP Negeri 7 Muara Badak
+- Identitas sekolah: Kandidat Sekolah Rujukan Google (KSRG)
+- Fungsi utama: Pembelajaran Jarak Jauh dan Ulangan Harian berbasis CBT.
+- Pengguna: Admin, Guru, dan Siswa.
+- Target perangkat: Chromebook, laptop, tablet, dan smartphone Android/iOS.
+- Bahasa antarmuka: Bahasa Indonesia.
+- Penggunaan: Ujian online dari rumah masing-masing.
+
+Aplikasi harus benar-benar fungsional, bukan hanya desain visual atau prototype. Seluruh tombol, formulir, autentikasi, database, penilaian, ekspor laporan, dan pengelolaan data harus terhubung dan dapat digunakan.
+
+Prioritaskan aplikasi yang stabil, aman, ringan, dan dapat segera diuji untuk pelaksanaan Ulangan Harian Informatika.
+
+### 2. TEKNOLOGI YANG DIGUNAKAN
+
+Gunakan arsitektur berikut:
+
+- **Frontend:** React, TypeScript, dan Vite.
+- **Styling:** Tailwind CSS dengan komponen UI modern dan konsisten.
+- **Backend:** Vercel Functions atau backend server-side yang kompatibel dengan Vercel.
+- **Database:** Turso Cloud SQLite/libSQL.
+- **ORM atau database access:** Drizzle ORM atau libSQL client yang kompatibel.
+- **Autentikasi:** Sistem login berbasis sesi yang aman, dengan password di-hash menggunakan algoritma yang sesuai.
+- **Validasi:** Validasi input di frontend dan backend.
+- **Hosting:** Vercel.
+- **Repository:** GitHub.
+- **Ekspor laporan:** Excel XLSX dan PDF.
+- **Impor data:** CSV dan Excel XLSX.
+
+Gunakan versi dependensi yang kompatibel dan stabil saat proyek dibuat.
+
+**Ketentuan arsitektur:**
+
+1. Semua operasi penting harus diproses melalui backend yang aman.
+2. Jangan pernah menyimpan kredensial database, secret key, atau password di frontend.
+3. Gunakan environment variables Vercel untuk konfigurasi rahasia.
+4. Sediakan file `.env.example` tanpa kredensial asli.
+5. Sertakan migrasi database dan proses inisialisasi tabel.
+6. Siapkan dokumentasi deployment dari GitHub ke Vercel dan koneksi ke Turso.
+7. Jangan menggunakan localStorage sebagai database utama.
+8. Gunakan penyimpanan sementara di perangkat hanya untuk membantu pemulihan jawaban, bukan sebagai pengganti penyimpanan server.
+9. Gunakan transaksi database untuk operasi penting, khususnya pengumpulan jawaban dan finalisasi ujian.
+10. Pastikan tidak ada fungsi utama yang hanya menggunakan data dummy setelah database dihubungkan.
+
+### 3. DESAIN DAN PENGALAMAN PENGGUNA
+
+Buat desain yang premium, modern, elegan, profesional, dan nyaman dipandang.
+
+Gunakan karakter visual:
+
+- Warna utama navy gelap atau midnight blue.
+- Aksen electric blue atau cyan.
+- Latar belakang terang yang bersih.
+- Mode gelap sebagai pilihan tambahan.
+- Tipografi modern yang mudah dibaca.
+- Kartu dengan sudut membulat, bayangan lembut, dan jarak antarelemen yang konsisten.
+- Ikon minimalis.
+- Animasi transisi yang halus dan tidak mengganggu.
+- Loading skeleton, indikator proses, notifikasi sukses, dan pesan kesalahan yang jelas.
+- Dashboard responsif dan mobile-first.
+
+Halaman login menampilkan identitas PJJ SPANJU, logo sekolah yang dapat diganti oleh admin, nama sekolah, serta informasi pelaksanaan ujian jika tersedia.
+
+Pada smartphone, gunakan navigasi sederhana, tombol besar, teks yang terbaca, formulir ringkas, dan tampilan ujian yang tidak mengharuskan siswa melakukan zoom.
+
+Hindari desain yang terlalu ramai, animasi berlebihan, atau komponen yang membuat halaman lambat.
+
+### 4. TIGA JENIS AKUN DAN HAK AKSES
+
+Buat sistem Role-Based Access Control (RBAC) dengan tiga peran.
+
+#### A. Akun Admin
+
+Admin mengelola data induk dan konfigurasi sistem.
+
+Fitur:
+
+1. Dashboard statistik jumlah guru, siswa, kelas, ujian, dan hasil ujian.
+2. Tambah, lihat, edit, dan hapus data guru.
+3. Tambah, lihat, edit, dan hapus data siswa.
+4. Impor data siswa secara massal melalui Excel atau CSV.
+5. Unduh template impor siswa.
+6. Validasi data sebelum impor.
+7. Tampilkan pratinjau data, kesalahan format, dan duplikasi sebelum impor.
+8. Atur akun, username, dan proses reset password.
+9. Atur profil sekolah, logo, nama sekolah, dan informasi kontak.
+10. Atur batas pelanggaran ujian.
+11. Atur kebijakan akses akun dan status aktif/nonaktif.
+12. Lihat log aktivitas admin dan aktivitas penting sistem.
+13. Backup database dan pemulihan data.
+14. Hapus data secara individual maupun massal dengan konfirmasi.
+15. Lihat status koneksi database dan kesehatan aplikasi.
+
+Admin memiliki kewenangan mengelola data induk, tetapi tidak boleh melihat atau mengubah jawaban siswa secara diam-diam tanpa pencatatan aktivitas.
+
+#### B. Akun Guru
+
+Guru mengelola kelas, mata pelajaran, ujian, penilaian, dan laporan.
+
+Fitur:
+
+1. Dashboard guru.
+2. Membuat dan mengelola kelas.
+3. Menambahkan siswa ke kelas.
+4. Mengelola mata pelajaran.
+5. Membuat ujian baru.
+6. Menentukan nama ujian, kelas, mata pelajaran, deskripsi, tanggal, waktu mulai, durasi, dan batas akhir.
+7. Menentukan KKM untuk setiap ujian.
+8. Mengatur token ujian.
+9. Mengatur jumlah percobaan ujian.
+10. Mengatur pengacakan soal dan opsi jawaban.
+11. Menentukan bobot soal.
+12. Membuat, mengedit, menyalin, dan menghapus soal.
+13. Melihat status peserta dan progres ujian.
+14. Memeriksa jumlah pelanggaran yang tercatat.
+15. Menilai soal esai secara manual.
+16. Melihat hasil ujian dan analisis nilai.
+17. Merilis atau menahan nilai.
+18. Mengunduh laporan dalam format Excel dan PDF.
+19. Melakukan backup data ujian sesuai kewenangannya.
+
+Guru hanya dapat mengelola kelas, ujian, dan data siswa yang menjadi kewenangannya. Akses lintas guru harus dibatasi berdasarkan hak akses.
+
+#### C. Akun Siswa
+
+Dashboard siswa harus sederhana dan mudah digunakan, terutama melalui smartphone.
+
+Fitur:
+
+1. Profil siswa.
+2. Nama lengkap, NISN, kelas, dan informasi akun.
+3. Daftar ujian yang tersedia.
+4. Informasi mata pelajaran, guru, jadwal, durasi, dan status ujian.
+5. Tombol mulai ujian.
+6. Halaman konfirmasi sebelum memulai.
+7. Input token ujian jika diwajibkan.
+8. Tampilan pengerjaan CBT.
+9. Indikator penyimpanan jawaban.
+10. Fitur menandai soal untuk ditinjau kembali.
+11. Konfirmasi sebelum mengakhiri ujian.
+12. Riwayat ujian yang sudah diikuti.
+13. Menu **Hasil Ujian** untuk melihat nilai yang telah dirilis guru.
+14. Informasi status penilaian apabila soal esai belum selesai dinilai.
+
+Siswa tidak boleh mengakses dashboard admin, data siswa lain, soal yang belum diizinkan, kunci jawaban, atau nilai yang belum dirilis.
+
+### 5. SISTEM KELAS DAN DATA SISWA
+
+Setiap kelas mempunyai:
+
+- Nama kelas, misalnya 7A, 7B, 8A, 8B, 8C, 9A, dan 9B.
+- Tingkat kelas.
+- Wali kelas jika diperlukan.
+- Daftar siswa.
+- Status kelas aktif atau nonaktif.
+
+Data siswa minimal terdiri atas:
+
+- NISN sebagai identitas unik jika tersedia.
+- Nama lengkap.
+- Username.
+- Kelas.
+- Status akun.
+- Password awal yang dibuat secara aman dan dapat diganti siswa.
+
+Pastikan siswa tidak terduplikasi berdasarkan identitas yang telah ditentukan.
+
+#### Fitur impor massal
+
+Sediakan tombol:
+
+- Unduh Template Excel.
+- Unduh Template CSV.
+- Pilih File.
+- Pratinjau Data.
+- Validasi Data.
+- Impor Data.
+- Unduh Laporan Kesalahan.
+
+Template harus memiliki header yang jelas dan contoh data yang dapat dihapus.
+
+Proses impor harus memvalidasi kolom wajib, kelas yang tersedia, duplikasi username/NISN, dan format file. Tampilkan jumlah data berhasil, gagal, dan dilewati.
+
+Jangan menghapus data lama secara otomatis ketika mengimpor data baru.
+
+### 6. PEMBUATAN DAN PENGELOLAAN UJIAN CBT
+
+Setiap ujian memiliki pengaturan berikut:
+
+- Nama ujian.
+- Mata pelajaran.
+- Kelas peserta.
+- Nama guru.
+- Deskripsi ujian.
+- Tanggal dan jam mulai.
+- Tanggal dan jam berakhir.
+- Durasi ujian dalam menit.
+- KKM.
+- Token ujian.
+- Jumlah soal.
+- Bobot penilaian.
+- Pengacakan soal.
+- Pengacakan opsi jawaban.
+- Batas pelanggaran.
+- Tindakan ketika batas pelanggaran tercapai.
+- Kebijakan penyimpanan dan pemulihan jawaban.
+- Pengaturan publikasi nilai.
+
+Status ujian: Draft, Terjadwal, Berlangsung, Selesai, dan Diarsipkan.
+
+Guru dapat menyalin pengaturan ujian sebelumnya untuk mempercepat pembuatan ujian baru.
+
+Token harus dapat diaktifkan, dinonaktifkan, dan diganti. Token divalidasi di server dan tidak boleh dianggap sebagai pengganti autentikasi siswa.
+
+### 7. LIMA JENIS SOAL
+
+Sediakan lima jenis soal dengan editor yang mudah digunakan.
+
+#### A. Pilihan Ganda
+
+- Satu jawaban benar.
+- Minimal 2 opsi dan dapat ditambah sesuai kebutuhan.
+- Kunci jawaban.
+- Bobot nilai.
+- Dukungan gambar pada soal dan opsi.
+
+#### B. Pilihan Ganda Kompleks
+
+- Beberapa opsi benar.
+- Siswa dapat memilih lebih dari satu opsi.
+- Guru dapat menentukan kunci jawaban dan metode penilaian.
+- Gunakan metode penilaian yang dijelaskan secara transparan, termasuk apakah jawaban salah mengurangi skor.
+
+#### C. Benar atau Salah
+
+- Pernyataan yang harus dinilai benar atau salah.
+- Kunci jawaban.
+- Bobot nilai.
+
+#### D. Menjodohkan
+
+- Pasangan pernyataan dan jawaban.
+- Siswa dapat memasangkan menggunakan dropdown atau mekanisme drag-and-drop yang tetap nyaman di layar sentuh.
+- Simpan pasangan jawaban siswa dengan benar.
+- Bobot nilai dapat diatur per pasangan atau per soal.
+
+#### E. Esai
+
+- Jawaban berbentuk teks.
+- Mendukung jawaban panjang.
+- Batas karakter opsional.
+- Autosave jawaban.
+- Guru dapat membaca jawaban, memberi skor manual, dan menambahkan catatan.
+- Status penilaian: Belum Dinilai dan Sudah Dinilai.
+
+Nilai esai tidak boleh otomatis dianggap nol hanya karena guru belum menilainya. Status ujian harus menunjukkan bahwa nilai akhir masih menunggu penilaian apabila ada esai yang belum diperiksa.
+
+Setiap soal mempunyai ID unik. Perubahan soal setelah ujian dimulai tidak boleh mengubah soal historis yang sedang atau telah dikerjakan siswa. Gunakan snapshot soal pada saat ujian dimulai.
+
+### 8. ANTARMUKA PENGERJAAN UJIAN
+
+Buat antarmuka CBT yang terinspirasi dari sistem ujian komputer nasional, tanpa menyalin identitas atau tampilan resmi ANBK.
+
+Bagian atas menampilkan:
+
+- Nama ujian.
+- Mata pelajaran.
+- Nama siswa.
+- Kelas.
+- Sisa waktu.
+- Status koneksi.
+- Status penyimpanan jawaban.
+
+Bagian tengah menampilkan satu soal dengan ukuran teks nyaman dibaca.
+
+Bagian bawah menyediakan:
+
+- Tombol Sebelumnya.
+- Tombol Selanjutnya.
+- Tombol Tandai Ragu-ragu.
+- Tombol Selesaikan Ujian.
+
+Sediakan panel nomor soal dengan empat status:
+
+- Hijau: sudah dijawab.
+- Merah: belum dijawab.
+- Kuning: ditandai ragu-ragu.
+- Abu-abu: belum dikunjungi.
+
+Warna harus disertai ikon atau label agar mudah dipahami oleh siswa.
+
+Timer harus menggunakan waktu server sebagai acuan. Jangan hanya mengandalkan jam perangkat siswa.
+
+Ketika waktu habis, server harus memfinalisasi ujian secara otomatis dengan jawaban yang sudah tersimpan. Jika koneksi terputus, lakukan sinkronisasi dan pemulihan jawaban setelah koneksi kembali, tanpa menggandakan pengumpulan jawaban.
+
+Sebelum ujian benar-benar dikumpulkan, tampilkan ringkasan jumlah soal terjawab, belum terjawab, dan ditandai ragu-ragu.
+
+### 9. DETEKSI PELANGGARAN DAN ANTIKECURANGAN
+
+Buat sistem pencatatan pelanggaran yang transparan dan dapat dikonfigurasi.
+
+Jenis kejadian yang dipantau:
+
+1. Berpindah tab atau halaman.
+2. Halaman kehilangan fokus.
+3. Browser memasuki kondisi tidak terlihat.
+4. Keluar dari mode fullscreen ketika fullscreen tersedia dan telah diaktifkan oleh pengguna.
+5. Mencoba meninggalkan halaman ujian.
+6. Koneksi internet terputus.
+7. Mencoba membuka kembali ujian yang sudah selesai.
+8. Kejadian lain yang memang dapat dideteksi secara sah oleh browser.
+
+Jangan langsung menganggap koneksi terputus sebagai kecurangan. Catat sebagai kejadian teknis yang berbeda.
+
+Untuk setiap pelanggaran, simpan:
+
+- ID ujian.
+- ID siswa.
+- Jenis kejadian.
+- Waktu kejadian berdasarkan server jika tersedia.
+- Jumlah kejadian.
+- Status tindak lanjut.
+
+Admin dapat mengatur batas pelanggaran, misalnya 3, 5, atau 10 kejadian.
+
+Guru dapat memilih tindakan sesuai kewenangannya:
+
+- Hanya mencatat dan memberi peringatan.
+- Menampilkan peringatan kepada siswa.
+- Mengunci pengerjaan sementara untuk ditinjau.
+- Menghentikan ujian jika batas tercapai, dengan kebijakan yang jelas dan pemulihan yang aman.
+
+Sediakan peringatan sebelum siswa mencapai batas.
+
+**Batasan teknis wajib diperhatikan:** browser web biasa tidak dapat menjamin pendeteksian screenshot, perekaman layar, split-screen, penggunaan perangkat kedua, atau penutupan aplikasi pada seluruh perangkat. Jangan menampilkan klaim bahwa semua kecurangan pasti terdeteksi. Catat hanya kejadian yang benar-benar dapat diamati dan jangan menyatakan kejadian teknis sebagai bukti kecurangan yang pasti.
+
+Gunakan fullscreen hanya dengan persetujuan dan interaksi pengguna. Jangan menggunakan metode tersembunyi untuk mengunci perangkat atau mencegah siswa menutup browser.
+
+### 10. FITUR LIVE CAMERA
+
+Siapkan arsitektur agar fitur pengawasan kamera langsung dapat ditambahkan.
+
+Fitur yang diinginkan:
+
+- Siswa mendapatkan informasi mengenai penggunaan kamera sebelum ujian.
+- Kamera hanya aktif setelah izin browser diberikan.
+- Indikator kamera aktif terlihat jelas.
+- Guru dapat melihat status kamera peserta.
+- Jika diperlukan, guru dapat melihat streaming langsung melalui dashboard pengawasan.
+- Kamera yang tidak aktif atau koneksi gagal tidak boleh otomatis dianggap sebagai kecurangan.
+
+Untuk live streaming, gunakan layanan media real-time yang mendukung WebRTC atau layanan streaming terkelola. Jangan mengirim video melalui polling database Turso.
+
+Persyaratan keamanan dan privasi:
+
+- HTTPS wajib.
+- Otorisasi ketat antara guru dan peserta ujian.
+- Token streaming sementara.
+- Tidak ada tautan streaming publik.
+- Tidak menyimpan rekaman secara default.
+- Jika rekaman diperlukan, harus ada pemberitahuan, tujuan yang jelas, pembatasan akses, dan kebijakan retensi.
+- Sediakan alternatif prosedur ketika perangkat tidak memiliki kamera atau koneksi tidak mencukupi.
+
+Jangan mengaktifkan kamera secara diam-diam. Jika integrasi streaming belum siap, tampilkan status fitur sebagai Belum Tersedia dan jangan membuat simulasi kamera palsu.
+
+### 11. SISTEM PENILAIAN
+
+Sediakan penilaian otomatis untuk soal objektif dan penilaian manual untuk esai.
+
+Guru dapat mengatur bobot setiap soal. Jika semua soal berbobot sama, gunakan bobot yang konsisten berdasarkan jumlah soal.
+
+Rumus nilai akhir:
+
+Nilai akhir = total poin yang diperoleh / total poin maksimal × 100.
+
+Untuk soal pilihan ganda kompleks, metode pemberian poin harus dikonfigurasi secara eksplisit dan konsisten.
+
+Nilai akhir belum final jika masih ada esai yang belum dinilai.
+
+Gunakan KKM yang ditetapkan guru untuk setiap ujian:
+
+- Tuntas: nilai akhir sama dengan atau lebih besar dari KKM.
+- Tidak Tuntas: nilai akhir di bawah KKM.
+
+Sediakan status tambahan seperti Menunggu Penilaian untuk ujian yang belum memiliki nilai final.
+
+Simpan nilai, KKM, dan aturan penilaian yang digunakan pada saat ujian agar hasil historis tidak berubah ketika guru mengubah konfigurasi untuk ujian berikutnya.
+
+### 12. RILIS NILAI DAN MENU HASIL UJIAN
+
+Guru mempunyai dua pilihan publikasi:
+
+1. Nilai dirilis otomatis setelah ujian dan penilaian selesai.
+2. Nilai dirilis manual oleh guru.
+
+Sebelum dirilis, nilai hanya dapat dilihat oleh pihak yang berwenang.
+
+Menu **Hasil Ujian** pada akun siswa menampilkan:
+
+- Nama ujian.
+- Mata pelajaran.
+- Tanggal ujian.
+- Nilai akhir jika telah dirilis.
+- KKM.
+- Keterangan Tuntas atau Tidak Tuntas.
+- Status penilaian.
+- Informasi bahwa nilai belum dirilis jika masih ditahan guru.
+
+Jangan tampilkan kunci jawaban atau pembahasan sebelum diizinkan oleh guru.
+
+### 13. LAPORAN DAN EKSPOR EXCEL/PDF
+
+Guru dapat memfilter hasil berdasarkan ujian, kelas, mata pelajaran, dan status penilaian.
+
+Sediakan tombol Unduh Excel dan Unduh PDF.
+
+Format tabel laporan harus memuat kolom berikut:
+
+1. No.
+2. Nama Siswa.
+3. Kelas.
+4. NISN.
+5. Nilai Ujian.
+6. Data Pelanggaran.
+7. Nilai.
+8. Keterangan.
+
+Gunakan definisi yang konsisten:
+
+- Nilai Ujian: nilai hasil CBT sesuai kebijakan penilaian yang ditetapkan.
+- Data Pelanggaran: ringkasan jumlah dan jenis pelanggaran yang tercatat.
+- Nilai: nilai akhir yang digunakan untuk menentukan ketuntasan.
+- Keterangan: Tuntas, Tidak Tuntas, atau Menunggu Penilaian.
+
+Jangan menggandakan nilai secara tidak jelas. Jika Nilai Ujian dan Nilai menggunakan data yang sama, dokumentasikan bahwa keduanya memiliki nilai identik dan jelaskan perbedaan penggunaannya jika diperlukan.
+
+#### Format Excel
+
+- Header profesional.
+- Judul laporan.
+- Nama sekolah.
+- Nama ujian.
+- Mata pelajaran.
+- Kelas.
+- Nama guru.
+- Tanggal pembuatan laporan.
+- Format angka nilai konsisten.
+- Kolom disesuaikan dengan panjang isi.
+- Filter tabel dan baris header yang jelas.
+- Ringkasan jumlah peserta, jumlah tuntas, jumlah tidak tuntas, dan jumlah menunggu penilaian.
+
+#### Format PDF
+
+- Logo sekolah di bagian atas.
+- Nama sekolah dan identitas laporan.
+- Judul hasil Ulangan Harian.
+- Nama ujian, kelas, mata pelajaran, dan nama guru.
+- Tabel hasil yang rapi dan mudah dibaca.
+- Ringkasan ketuntasan.
+- Tanggal pembuatan laporan.
+- Ruang tanda tangan guru jika diperlukan.
+
+PDF harus tetap rapi ketika dicetak atau dibagikan melalui grup kelas. Gunakan pemenggalan halaman yang benar dan ulangi header tabel pada halaman berikutnya.
+
+Guru hanya boleh mengekspor data sesuai hak aksesnya.
+
+### 14. PENGELOLAAN DAN PENGHAPUSAN DATA
+
+Sediakan operasi tambah, lihat, edit, dan hapus pada setiap modul yang relevan.
+
+Data yang dapat dihapus:
+
+- Guru.
+- Siswa.
+- Kelas.
+- Mata pelajaran.
+- Ujian.
+- Soal.
+- Data atau hasil tertentu sesuai kewenangan.
+
+Sediakan penghapusan individual dan penghapusan massal.
+
+Untuk penghapusan massal:
+
+1. Tampilkan jumlah data yang akan dihapus.
+2. Tampilkan ringkasan data terpilih.
+3. Minta konfirmasi eksplisit.
+4. Tampilkan peringatan jika data berkaitan dengan hasil ujian.
+5. Catat aktivitas penghapusan.
+6. Gunakan mekanisme arsip atau soft delete untuk data yang mempunyai riwayat akademik, jika sesuai.
+
+Jangan menghapus riwayat nilai atau hasil ujian secara tidak sengaja ketika guru menghapus atau menonaktifkan akun siswa.
+
+### 15. BACKUP DAN PEMULIHAN DATA
+
+Buat fitur backup yang dapat diakses oleh admin.
+
+Fitur:
+
+- Unduh backup database.
+- Ekspor data penting dalam format JSON.
+- Backup data guru, siswa, kelas, mata pelajaran, ujian, soal, jawaban, nilai, dan log pelanggaran.
+- Validasi integritas file backup.
+- Tampilkan tanggal dan waktu backup.
+- Impor kembali file backup yang valid.
+- Tampilkan pratinjau sebelum pemulihan.
+- Konfirmasi sebelum data ditimpa.
+- Laporkan jumlah data yang berhasil dipulihkan dan kesalahan yang ditemukan.
+
+Gunakan versi format backup dan validasi skema. Backup tidak boleh memasukkan password dalam bentuk teks biasa, secret key, atau kredensial database.
+
+Pemulihan harus mempertimbangkan relasi antartabel dan dilakukan secara aman. Jika memungkinkan, sediakan opsi pemulihan ke lingkungan terpisah atau pemulihan selektif sebelum mengganti data aktif.
+
+Jangan mengklaim bahwa backup berhasil sebelum proses benar-benar selesai.
+
+### 16. REALTIME DAN KESTABILAN KONEKSI
+
+Aplikasi harus terasa responsif dan menyimpan data secara konsisten.
+
+Ketentuan:
+
+- Simpan jawaban setiap kali siswa mengubah jawaban, dengan debounce jika diperlukan.
+- Tampilkan status Menyimpan, Tersimpan, atau Gagal Menyimpan.
+- Gunakan server sebagai sumber kebenaran untuk waktu dan status ujian.
+- Sediakan retry dengan jeda bertahap ketika koneksi gagal.
+- Gunakan ID unik untuk setiap pengumpulan agar retry tidak menggandakan data.
+- Jangan menghapus jawaban yang sudah tersimpan ketika jaringan terputus.
+- Pulihkan jawaban yang belum tersinkronisasi ketika koneksi kembali.
+- Batasi permintaan berulang agar database tidak dibebani.
+- Gunakan pagination untuk daftar siswa dan hasil ujian yang besar.
+
+Realtime tidak berarti setiap perubahan harus terus-menerus menulis seluruh database. Pilih mekanisme sinkronisasi yang efisien.
+
+### 17. STRUKTUR DATABASE
+
+Rancang skema Turso yang memiliki relasi jelas dan indeks yang tepat.
+
+Tabel minimal:
+
+1. `users` — identitas login, peran, dan status akun.
+2. `teachers` — profil guru.
+3. `students` — profil siswa dan NISN.
+4. `classes` — data kelas.
+5. `class_students` — hubungan siswa dan kelas.
+6. `subjects` — mata pelajaran.
+7. `teacher_classes` — hubungan guru, kelas, dan mata pelajaran.
+8. `exams` — konfigurasi ujian.
+9. `exam_participants` — peserta dan status ujian.
+10. `questions` — data soal.
+11. `question_options` — opsi jawaban.
+12. `matching_pairs` — pasangan soal menjodohkan.
+13. `exam_question_snapshots` — versi soal yang digunakan peserta.
+14. `answers` — jawaban siswa.
+15. `essay_grades` — skor dan catatan penilaian esai.
+16. `exam_tokens` — token dan masa berlakunya.
+17. `exam_violations` — catatan pelanggaran.
+18. `exam_results` — rekap dan status nilai.
+19. `audit_logs` — catatan aktivitas penting.
+20. `school_settings` — profil sekolah dan konfigurasi sistem.
+
+Tambahkan tabel lain jika diperlukan, misalnya untuk pengaturan publikasi nilai, sesi autentikasi, atau status sinkronisasi.
+
+Gunakan foreign key, indeks, constraint unik, transaksi, serta aturan penghapusan yang sesuai. Simpan waktu dengan standar yang konsisten dan tampilkan menggunakan zona waktu Asia/Makassar.
+
+Jangan menyimpan seluruh data aplikasi dalam satu kolom JSON jika data tersebut membutuhkan pencarian, relasi, dan validasi terstruktur.
+
+### 18. KEAMANAN APLIKASI
+
+Terapkan:
+
+- Password hashing yang aman.
+- Validasi sesi dan autentikasi pada server.
+- Pemeriksaan role dan kepemilikan data pada setiap endpoint.
+- Proteksi terhadap SQL injection.
+- Validasi input dan sanitasi konten.
+- Rate limiting pada login dan endpoint sensitif.
+- Cookie sesi dengan konfigurasi aman.
+- Perlindungan CSRF jika relevan dengan mekanisme autentikasi.
+- Pengamanan upload file.
+- Pembatasan ukuran dan tipe file.
+- Audit log untuk aktivitas penting.
+- Pemisahan secret server dan kode frontend.
+- Penanganan kesalahan tanpa membocorkan informasi sensitif.
+
+Siswa tidak boleh dapat memodifikasi nilai, KKM, kunci jawaban, durasi, status ujian, atau batas pelanggaran melalui manipulasi browser.
+
+Seluruh penilaian, validasi waktu, pemeriksaan token, dan finalisasi ujian harus divalidasi oleh server.
+
+### 19. STRUKTUR PROYEK DAN DOKUMENTASI
+
+Susun kode secara modular dan mudah dikembangkan.
+
+Pisahkan:
+
+- Halaman dan komponen frontend.
+- Modul autentikasi.
+- Modul admin.
+- Modul guru.
+- Modul siswa.
+- Modul CBT.
+- Modul penilaian.
+- Modul ekspor laporan.
+- Modul impor data.
+- Modul backup.
+- API/backend.
+- Validasi.
+- Database schema dan migrasi.
+- Pengujian otomatis.
+
+Sediakan:
+
+- `README.md`.
+- `.env.example`.
+- Instruksi membuat database Turso.
+- Instruksi menjalankan migrasi.
+- Instruksi menjalankan aplikasi secara lokal.
+- Instruksi deployment ke Vercel.
+- Instruksi menghubungkan repository GitHub.
+- Instruksi membuat akun admin pertama secara aman.
+- Dokumentasi format impor siswa.
+- Dokumentasi backup dan pemulihan.
+- Daftar fitur yang sudah berfungsi dan fitur yang belum tersedia.
+
+Jangan membuat akun admin dengan password rahasia yang ditanam permanen di source code.
+
+### 20. TAHAPAN PENGEMBANGAN
+
+Bangun aplikasi secara bertahap. Jangan mengerjakan semua fitur sekaligus jika hal tersebut membuat aplikasi tidak stabil.
+
+**Tahap 1 — Versi inti yang dapat diuji**
+
+Prioritaskan:
+
+- Login Admin, Guru, dan Siswa.
+- Koneksi database Turso.
+- CRUD data dasar.
+- Impor siswa dari CSV dan template Excel.
+- Pembuatan kelas, mata pelajaran, dan ujian.
+- Lima jenis soal.
+- Token ujian.
+- Timer.
+- Penyimpanan jawaban.
+- Finalisasi ujian.
+- Penilaian otomatis.
+- Penilaian manual esai.
+- KKM dan publikasi nilai.
+- Menu Hasil Ujian.
+- Ekspor hasil ke Excel.
+- Tampilan responsif smartphone.
+
+**Tahap 2 — Pelaporan dan perlindungan ujian**
+
+- Ekspor PDF dengan logo.
+- Pencatatan pelanggaran.
+- Pengaturan batas pelanggaran.
+- Peringatan ketika siswa berpindah tab atau meninggalkan halaman.
+- Backup dan pemulihan.
+- Audit log.
+- Pengujian koneksi terputus dan pemulihan jawaban.
+
+**Tahap 3 — Pengawasan lanjutan**
+
+- Integrasi live camera menggunakan layanan streaming yang sesuai.
+- Dashboard pemantauan peserta.
+- Penguatan analisis aktivitas ujian.
+- Pengembangan fitur tambahan berdasarkan hasil pengujian.
+
+Setiap tahap harus tetap dapat digunakan tanpa bergantung pada fitur tahap berikutnya.
+
+### 21. PENGUJIAN WAJIB
+
+Sebelum aplikasi dinyatakan siap, uji skenario berikut:
+
+1. Admin membuat akun guru.
+2. Admin mengimpor banyak siswa melalui file.
+3. Guru membuat kelas dan menambahkan siswa.
+4. Guru membuat ujian dengan kelima jenis soal.
+5. Siswa login dan hanya melihat ujian untuk kelasnya.
+6. Siswa memasukkan token yang valid.
+7. Siswa menjawab soal dan berpindah antarsoal.
+8. Jawaban tersimpan dan dapat dipulihkan setelah koneksi terputus.
+9. Timer tetap benar ketika jam perangkat berbeda.
+10. Ujian otomatis berakhir ketika waktu habis.
+11. Guru menilai esai.
+12. Guru merilis nilai.
+13. Siswa melihat hasil ujian setelah dirilis.
+14. Nilai Tuntas dan Tidak Tuntas dihitung berdasarkan KKM.
+15. Guru mengunduh Excel dan PDF.
+16. Admin melakukan backup dan pemulihan pada lingkungan pengujian.
+17. Siswa tidak dapat mengakses data siswa lain.
+18. Siswa tidak dapat mengubah nilai melalui frontend.
+19. Penghapusan massal meminta konfirmasi.
+20. Aplikasi berjalan baik di smartphone dan Chromebook.
+
+### 22. INSTRUKSI OUTPUT DARI GOOGLE AI STUDIO
+
+Mulailah dengan merancang arsitektur dan struktur proyek, lalu implementasikan aplikasi yang dapat dijalankan.
+
+Jangan hanya memberikan contoh desain, pseudocode, atau halaman statis.
+
+Untuk setiap tahap:
+
+1. Jelaskan file yang dibuat atau diubah.
+2. Berikan kode lengkap untuk file yang diperlukan.
+3. Pastikan semua import dan dependensi benar.
+4. Pastikan endpoint frontend dan backend saling terhubung.
+5. Pastikan operasi CRUD benar-benar menyimpan data ke Turso.
+6. Sertakan skema dan migrasi database.
+7. Sertakan cara menjalankan dan menguji fitur.
+8. Jelaskan environment variables yang dibutuhkan.
+9. Periksa dan perbaiki error sebelum melanjutkan.
+10. Jangan menghapus fitur yang sudah berfungsi ketika menambahkan fitur baru.
+
+Jangan mengarang bahwa suatu fitur sudah selesai jika belum diimplementasikan dan diuji.
+
+Jika ada fitur yang memerlukan layanan eksternal, jelaskan layanan yang diperlukan, konfigurasi, biaya potensial, dan langkah integrasinya. Jangan membuat tombol palsu untuk fitur yang belum tersedia.
+
+**Target akhir:** aplikasi PJJ dan CBT SPANJU yang benar-benar fungsional, aman, modern, mobile-friendly, dapat dideploy melalui GitHub dan Vercel, menggunakan Turso sebagai database utama, serta mudah dikelola oleh Admin, Guru, dan Siswa SMP Negeri 7 Muara Badak.
