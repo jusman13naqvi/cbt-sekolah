@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Lock, User, Eye, EyeOff, LogIn, Sparkles } from 'lucide-react';
+import { ShieldCheck, Lock, User, Eye, EyeOff, LogIn } from 'lucide-react';
 import { api, setAuthToken, setStoredUser } from '../../services/api';
 
 interface LoginPageProps {
@@ -41,11 +41,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleQuickDemo = (demoUser: string, demoPass: string) => {
-    setUsername(demoUser);
-    setPassword(demoPass);
   };
 
   return (
@@ -147,33 +142,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
             )}
           </button>
         </form>
-
-        {/* Quick Demo Credentials */}
-        <div className="mt-6 pt-5 border-t border-slate-800">
-          <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2 text-center flex items-center justify-center gap-1">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Uji Coba Cepat (Demo Users)
-          </p>
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              onClick={() => handleQuickDemo('admin', 'admin123')}
-              className="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[11px] text-purple-300 font-medium text-center transition"
-            >
-              Admin
-            </button>
-            <button
-              onClick={() => handleQuickDemo('guruinf', 'guru123')}
-              className="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[11px] text-cyan-300 font-medium text-center transition"
-            >
-              Guru Inf
-            </button>
-            <button
-              onClick={() => handleQuickDemo('siswa7a', 'siswa123')}
-              className="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[11px] text-emerald-300 font-medium text-center transition"
-            >
-              Siswa 7A
-            </button>
-          </div>
-        </div>
       </div>
 
       {/* Footer */}
