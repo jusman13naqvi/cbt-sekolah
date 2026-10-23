@@ -26,15 +26,44 @@ async function request(endpoint: string, options: RequestInit = {}) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const res = await fetch(`${API_BASE}${endpoint}`, {
-    ...options,
-    headers,
-  });
+  // Allow configurable API base URL via environment variable (useful for Vercel or external Express servers)
+  const envBase = (import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || API_BASE).replace(/\/$/, '');
+  const targetUrl = endpoint.startsWith('http') ? endpoint : `${envBase}${endpoint}`;
 
-  const data = await res.json();
-  if (!res.ok) {
-    throw new Error(data.error || 'Terjadi kesalahan pada server.');
+  let res: Response;
+  try {
+    res = await fetch(targetUrl, {
+      ...options,
+      headers,
+    });
+  } catch (netError: any) {
+    throw new Error('Gagal terhubung ke server backend. Periksa koneksi internet atau server API Anda.');
   }
+
+  const contentType = res.headers.get('content-type') || '';
+  let data: any = {};
+
+  if (contentType.includes('application/json')) {
+    try {
+      data = await res.json();
+    } catch {
+      data = {};
+    }
+  } else {
+    // Handling non-JSON responses (e.g. 404 HTML from static host like Vercel)
+    const textData = await res.text().catch(() => '');
+    if (!res.ok) {
+      if (res.status === 404) {
+        throw new Error('Layanan API tidak ditemukan (404 Not Found). Pastikan backend server Express telah berjalan atau variabel VITE_API_BASE_URL sudah dikonfigurasi di hosting Anda.');
+      }
+      throw new Error(`Server merespon dengan status ${res.status}: ${textData.substring(0, 100) || 'Format respon bukan JSON valid.'}`);
+    }
+  }
+
+  if (!res.ok) {
+    throw new Error(data.error || `Terjadi kesalahan pada server (Status ${res.status}).`);
+  }
+
   return data;
 }
 
