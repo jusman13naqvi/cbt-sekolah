@@ -1847,9 +1847,17 @@ app.get('/api/student/results', authenticateToken, requireRole('student'), async
   }
 });
 
-// ================= VITE DEV / STATIC HANDLER =================
+// ================= VITE DEV / STATIC HANDLER & EXPORTS =================
+let initPromise: Promise<void> | null = null;
+export async function ensureDbInitialized() {
+  if (!initPromise) {
+    initPromise = initializeDatabase();
+  }
+  return initPromise;
+}
+
 async function startServer() {
-  await initializeDatabase();
+  await ensureDbInitialized();
 
   if (process.env.NODE_ENV !== 'production') {
     const { createServer: createViteServer } = await import('vite');
@@ -1870,4 +1878,8 @@ async function startServer() {
   });
 }
 
-startServer();
+if (!process.env.VERCEL) {
+  startServer();
+}
+
+export default app;
