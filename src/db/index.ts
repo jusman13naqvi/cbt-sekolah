@@ -1,10 +1,10 @@
 import { createClient } from '@libsql/client';
-import path from 'path';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const dbUrl = process.env.TURSO_DATABASE_URL || 'file:spanju.db';
+const defaultLocalDb = process.env.VERCEL ? 'file:/tmp/spanju.db' : 'file:spanju.db';
+const dbUrl = process.env.TURSO_DATABASE_URL || defaultLocalDb;
 const authToken = process.env.TURSO_AUTH_TOKEN || '';
 
 export const db = createClient({
